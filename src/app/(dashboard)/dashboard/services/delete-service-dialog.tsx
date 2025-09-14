@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,7 +46,7 @@ export function DeleteServiceDialog({ serviceId, serviceName, children }: Delete
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the service
-            <strong> "{serviceName}"</strong> from your system.
+            <strong> &quot;{serviceName}&quot;</strong> from your system.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
