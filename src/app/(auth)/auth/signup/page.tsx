@@ -8,7 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { signUp } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,32 +26,42 @@ export default function SignUpPage() {
     subscribeNewsletter: false
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
+  // const [isSubmitted, setIsSubmitted] = useState(false);
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
+      toast.error("Please fill in all fields");
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    const { data, error } = await signUp.email({
+      email: formData.email,
+      password: formData.password,
+      name: `${formData.firstName} ${formData.lastName}`,
+      callbackURL: `/dashboard`,
+    }, {
+      onSuccess: () => {
+        toast.success("Sign up successful");
+        router.push("/dashboard");
+      },
+      onError: (error) => {
+        toast.error(error.error.message);
+      },
+    });
     
-    console.log("Sign up attempt:", formData);
+    console.log("Sign up attempt:", formData, data, error);
     setIsLoading(false);
-    setIsSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        agreeToTerms: false,
-        subscribeNewsletter: false
-      });
-    }, 3000);
+    // setIsSubmitted(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,29 +77,29 @@ export default function SignUpPage() {
                      formData.password && formData.confirmPassword && 
                      passwordsMatch && formData.agreeToTerms;
 
-  if (isSubmitted) {
-    return (
-      <Card className="w-full">
-        <CardContent className="pt-8">
-          <div className="text-center space-y-6">
-            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-green-600" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold">Account Created!</h2>
-              <p className="text-muted-foreground">
-                We&apos;ve sent a confirmation email to {formData.email}. 
-                Please check your inbox and click the link to verify your account.
-              </p>
-            </div>
-            <Button asChild className="w-full">
-              <Link href="/auth/login">Continue to Sign In</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // if (isSubmitted) {
+  //   return (
+  //     <Card className="w-full">
+  //       <CardContent className="pt-8">
+  //         <div className="text-center space-y-6">
+  //           <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+  //             <CheckCircle className="h-8 w-8 text-green-600" />
+  //           </div>
+  //           <div className="space-y-2">
+  //             <h2 className="text-2xl font-bold">Account Created!</h2>
+  //             <p className="text-muted-foreground">
+  //               We&apos;ve sent a confirmation email to {formData.email}. 
+  //               Please check your inbox and click the link to verify your account.
+  //             </p>
+  //           </div>
+  //           <Button asChild className="w-full">
+  //             <Link href="/auth/login">Continue to Sign In</Link>
+  //           </Button>
+  //         </div>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // }
 
   return (
     <Card className="w-full">
@@ -274,7 +287,7 @@ export default function SignUpPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <Button variant="outline" className="w-full">
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
@@ -295,12 +308,6 @@ export default function SignUpPage() {
               />
             </svg>
             Google
-          </Button>
-          <Button variant="outline" className="w-full">
-            <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-            Facebook
           </Button>
         </div>
 

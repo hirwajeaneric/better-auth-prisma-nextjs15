@@ -21,13 +21,20 @@ import {
   User, 
   LogOut
 } from "lucide-react";
-
+import { signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 interface DashboardHeaderProps {
   onMenuClick: () => void;
 }
 
 export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const [notifications] = useState(3); // Mock notification count
+  const router = useRouter();
+  
+  const logout = async () => {
+    await signOut();
+    router.push("/auth/login");
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
@@ -103,10 +110,10 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <a href="/auth/login">
+              <Button onClick={() => logout()}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign out</span>
-              </a>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
