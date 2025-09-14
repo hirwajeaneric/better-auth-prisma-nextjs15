@@ -27,11 +27,11 @@ import { ServiceFilters } from "./service-filters";
 import { ServiceActions } from "./service-actions";
 
 interface ServicesPageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     status?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function ServicesPage({ searchParams }: ServicesPageProps) {
