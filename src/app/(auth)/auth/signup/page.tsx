@@ -31,7 +31,7 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
       toast.error("Please fill in all fields");
       setIsLoading(false);
@@ -58,7 +58,7 @@ export default function SignUpPage() {
         toast.error(error.error.message);
       },
     });
-    
+
     console.log("Sign up attempt:", formData, data, error);
     setIsLoading(false);
     // setIsSubmitted(true);
@@ -73,9 +73,9 @@ export default function SignUpPage() {
   };
 
   const passwordsMatch = formData.password === formData.confirmPassword;
-  const isFormValid = formData.firstName && formData.lastName && formData.email && 
-                     formData.password && formData.confirmPassword && 
-                     passwordsMatch && formData.agreeToTerms;
+  const isFormValid = formData.firstName && formData.lastName && formData.email &&
+    formData.password && formData.confirmPassword &&
+    passwordsMatch && formData.agreeToTerms;
 
   // if (isSubmitted) {
   //   return (
@@ -232,7 +232,7 @@ export default function SignUpPage() {
                 id="agreeToTerms"
                 name="agreeToTerms"
                 checked={formData.agreeToTerms}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked) =>
                   setFormData(prev => ({ ...prev, agreeToTerms: checked as boolean }))
                 }
                 className="mt-1"
@@ -256,7 +256,7 @@ export default function SignUpPage() {
                 id="subscribeNewsletter"
                 name="subscribeNewsletter"
                 checked={formData.subscribeNewsletter}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked) =>
                   setFormData(prev => ({ ...prev, subscribeNewsletter: checked as boolean }))
                 }
               />
@@ -266,9 +266,9 @@ export default function SignUpPage() {
             </div>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full" 
+          <Button
+            type="submit"
+            className="w-full"
             disabled={isLoading || !isFormValid}
           >
             {isLoading ? "Creating account..." : "Create account"}
